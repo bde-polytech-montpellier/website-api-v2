@@ -45,6 +45,10 @@ npm run start:dev
 npm run start:prod
 ```
 
+## Documentation
+
+One the app is running, you can access the Swagger at the `/specs` route
+
 ## Test
 
 ```bash
