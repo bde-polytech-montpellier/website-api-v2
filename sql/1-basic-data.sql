@@ -1,5 +1,5 @@
 INSERT INTO "Role"
-  VALUES (1, 'Admin'), (2, 'User');
+  VALUES (1, 'admin'), (2, 'user');
 
 -- Password: azerty
 INSERT INTO "User"

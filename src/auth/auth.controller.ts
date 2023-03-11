@@ -1,16 +1,16 @@
 import {
   Controller,
   Post,
-  UseGuards,
   Request,
+  Body,
   UsePipes,
   ValidationPipe,
-  Body,
+  UseGuards,
 } from '@nestjs/common';
-import { LocalAuthGuard } from './local-auth.gard';
-import { CreateUserDto } from '../users/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
+import { LocalAuthGuard } from './guards/local-auth.gard';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 
@@ -21,9 +21,13 @@ export class AuthController {
 
   @Post('signup')
   @UsePipes(ValidationPipe)
-  signup(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+  signup(@Body(new ValidationPipe()) createUserDto: CreateUserDto): {
+    access_token: string;
+  } {
+    const password = createUserDto.password;
+
     return bcrypt
-      .hash(createUserDto.password, 10)
+      .hash(password, 10)
       .then((hash: string) =>
         this.authService.registerUser({
           ...createUserDto,
@@ -35,7 +39,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('signin')
-  async login(@Request() req: any) {
-    return req.user;
+  login(@Request() req: any) {
+    return this.authService.login(req.user);
   }
 }

@@ -5,23 +5,26 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Role {
-  id            Int          @id @default(autoincrement()) @db.SmallInt
-  name          String       @unique
-  permissionsId Int?         @db.SmallInt
-  user          User[]
-  permissions   Permissions? @relation(fields: [permissionsId], references: [id])
+  id          Int           @id @default(autoincrement()) @db.SmallInt
+  name        String        @unique
+  user        User[]
+  permissions Permissions[]
 }
 
 model Permissions {
-  id   Int    @id @default(autoincrement()) @db.SmallInt
-  name String @unique
-  role Role[]
+  id    Int    @id @default(autoincrement()) @db.SmallInt
+  name  String @unique
+  roles Role[]
 }
 
 model User {
@@ -29,9 +32,9 @@ model User {
   name        String        @db.VarChar(255)
   email       String        @unique @db.VarChar(255)
   password    String
-  role_id      Int           @default(2)
+  role_id     Int           @default(2)
   role        Role          @relation(references: [id], fields: [role_id])
-  eventImages EventImages[]
+  eventImages EventImage[]
 }
 
 model Partner {
@@ -47,7 +50,7 @@ model Partner {
 
 model Promotion {
   id          String  @id @default(uuid()) @db.Uuid
-  partner_id   String  @db.Uuid
+  partner_id  String  @db.Uuid
   name        String  @db.VarChar(255)
   description String?
   partner     Partner @relation(references: [id], fields: [partner_id])
@@ -57,6 +60,7 @@ model Club {
   id          String  @id @default(uuid()) @db.Uuid
   name        String  @db.VarChar(255)
   summary     String  @db.VarChar(500)
+  active      Boolean @default(true)
   picture     String?
   description String?
   facebook    String? @unique @db.VarChar(255)
@@ -65,28 +69,36 @@ model Club {
 }
 
 model Event {
-  id          String        @id @default(uuid()) @db.Uuid
-  name        String        @db.VarChar(255)
-  summary     String        @db.VarChar(500)
-  picture     String?
-  description String?
-  begin_date  DateTime?     @db.Date
-  begin_time  DateTime?     @db.Time
-  end_date    DateTime?     @db.Date
-  end_time    DateTime?     @db.Time
-  location    String?       @db.VarChar(255)
-  spacetime   String?       @db.VarChar(500)
-  price       Float?
-  club_id      String?       @db.Uuid
-  club        Club?         @relation(references: [id], fields: [club_id])
-  event_images EventImages[]
+  id             String        @id @default(uuid()) @db.Uuid
+  name           String        @db.VarChar(255)
+  summary        String        @db.VarChar(500)
+  picture        String?
+  description    String?
+  begin_date     DateTime?     @db.Timestamp()
+  end_date       DateTime?     @db.Timestamp()
+  location       String?       @db.VarChar(255)
+  spacetime      String?       @db.VarChar(500)
+  standard_price Float?
+  reduced_price  Float?
+  club_id        String?       @db.Uuid
+  club           Club?         @relation(references: [id], fields: [club_id])
+  event_images   EventImage[]
 }
 
-model EventImages {
-  id      String @id @default(uuid()) @db.Uuid
+model EventImage {
+  id       String @id @default(uuid()) @db.Uuid
   event_id String @db.Uuid
   user_id  String @db.Uuid
-  image   Bytes
-  event   Event  @relation(references: [id], fields: [event_id])
-  user    User   @relation(references: [id], fields: [user_id])
+  image    Bytes
+  event    Event  @relation(references: [id], fields: [event_id])
+  user     User   @relation(references: [id], fields: [user_id])
+}
+
+model Goodie {
+  id             String  @id @default(uuid()) @db.Uuid
+  name           String  @db.VarChar(255)
+  description    String?
+  picture        String?
+  standard_price Float?
+  reduced_price  Float?
 }

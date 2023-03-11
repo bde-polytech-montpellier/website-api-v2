@@ -1,0 +1,102 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Role {
+  id Int [pk, increment]
+  name String [unique, not null]
+  user User [not null]
+  permissions Permissions [not null]
+}
+
+Table Permissions {
+  id Int [pk, increment]
+  name String [unique, not null]
+  roles Role [not null]
+}
+
+Table User {
+  id String [pk]
+  name String [not null]
+  email String [unique, not null]
+  password String [not null]
+  role_id Int [not null, default: 2]
+  role Role [not null]
+  eventImages EventImage [not null]
+}
+
+Table Partner {
+  id String [pk]
+  name String [not null]
+  summary String [not null]
+  picture String
+  description String
+  email String [unique]
+  website String
+  promotions Promotion [not null]
+}
+
+Table Promotion {
+  id String [pk]
+  partner_id String [not null]
+  name String [not null]
+  description String
+  partner Partner [not null]
+}
+
+Table Club {
+  id String [pk]
+  name String [not null]
+  summary String [not null]
+  active Boolean [not null, default: true]
+  picture String
+  description String
+  facebook String [unique]
+  instagram String
+  Event Event [not null]
+}
+
+Table Event {
+  id String [pk]
+  name String [not null]
+  summary String [not null]
+  picture String
+  description String
+  begin_date DateTime
+  end_date DateTime
+  location String
+  spacetime String
+  standard_price Float
+  reduced_price Float
+  club_id String
+  club Club
+  event_images EventImage [not null]
+}
+
+Table EventImage {
+  id String [pk]
+  event_id String [not null]
+  user_id String [not null]
+  image Bytes [not null]
+  event Event [not null]
+  user User [not null]
+}
+
+Table Goodie {
+  id String [pk]
+  name String [not null]
+  description String
+  picture String
+  standard_price Float
+  reduced_price Float
+}
+
+Ref: User.role_id > Role.id
+
+Ref: Promotion.partner_id > Partner.id
+
+Ref: Event.club_id > Club.id
+
+Ref: EventImage.event_id > Event.id
+
+Ref: EventImage.user_id > User.id

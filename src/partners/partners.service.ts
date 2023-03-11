@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { UpdatePartnerDto } from './dto/update-partner.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class PartnersService {
+  constructor(private readonly prisma: PrismaService) {}
+
   create(createPartnerDto: CreatePartnerDto) {
-    return 'This action adds a new partner';
+    return this.prisma.partner.create({ data: createPartnerDto });
   }
 
   findAll() {
-    return `This action returns all partners`;
+    return this.prisma.partner.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} partner`;
+  findOne(id: string) {
+    return this.prisma.partner.findUnique({ where: { id } });
   }
 
-  update(id: number, updatePartnerDto: UpdatePartnerDto) {
-    return `This action updates a #${id} partner`;
+  update(id: string, updatePartnerDto: UpdatePartnerDto) {
+    return this.prisma.partner.update({
+      where: { id },
+      data: updatePartnerDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} partner`;
+  remove(id: string) {
+    return this.prisma.partner.delete({ where: { id } });
   }
 }

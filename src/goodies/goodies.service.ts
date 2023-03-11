@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGoodyDto } from './dto/create-goody.dto';
-import { UpdateGoodyDto } from './dto/update-goody.dto';
+import { CreateGoodieDto } from './dto/create-goodie.dto';
+import { UpdateGoodieDto } from './dto/update-goodie.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class GoodiesService {
-  create(createGoodyDto: CreateGoodyDto) {
-    return 'This action adds a new goody';
+  constructor(private readonly prisma: PrismaService) {}
+  create(createGoodieDto: CreateGoodieDto) {
+    return this.prisma.goodie.create({ data: createGoodieDto });
   }
 
   findAll() {
-    return `This action returns all goodies`;
+    return this.prisma.goodie.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} goody`;
+  findOne(id: string) {
+    return this.prisma.goodie.findUnique({ where: { id } });
   }
 
-  update(id: number, updateGoodyDto: UpdateGoodyDto) {
-    return `This action updates a #${id} goody`;
+  update(id: string, updateGoodyDto: UpdateGoodieDto) {
+    return this.prisma.goodie.update({
+      where: { id },
+      data: updateGoodyDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} goody`;
+  remove(id: string) {
+    return this.prisma.goodie.delete({ where: { id } });
   }
 }

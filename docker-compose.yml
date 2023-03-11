@@ -23,6 +23,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
+      - ./prisma:/home
       - bde-db-test-data:/var/lib/postgresql/data
 
 volumes:

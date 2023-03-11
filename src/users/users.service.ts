@@ -1,16 +1,13 @@
 import { PrismaService } from './../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create(createUserDto: Prisma.UserCreateInput) {
-    return this.prismaService.user.create({
-      data: createUserDto,
-    });
+  create(createUserInput: Prisma.UserCreateInput) {
+    return this.prismaService.user.create({ data: createUserInput });
   }
 
   findAll() {
@@ -18,37 +15,32 @@ export class UsersService {
   }
 
   findOne(id: string) {
-    return this.prismaService.user.findUnique({
-      where: {
-        id,
-      },
-    });
+    return this.prismaService.user.findUnique({ where: { id } });
   }
 
   findByName(name: string) {
-    return this.prismaService.user.findMany({
-      where: {
-        name,
-      },
-    });
+    return this.prismaService.user.findMany({ where: { name } });
   }
 
   findByEmail(email: string) {
+    return this.prismaService.user.findUnique({ where: { email } });
+  }
+
+  findOneWithRole(id: string) {
     return this.prismaService.user.findUnique({
-      where: {
-        email,
-      },
+      where: { id },
+      include: { role: true },
     });
   }
 
-  update(id: string, updateUserDto: Prisma.UserUpdateInput) {
+  update(id: string, updateUserInput: Prisma.UserUpdateInput) {
     return this.prismaService.user.update({
       where: { id },
-      data: updateUserDto,
+      data: updateUserInput,
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    return this.prismaService.user.delete({ where: { id } });
   }
 }

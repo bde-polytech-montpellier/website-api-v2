@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUUID, IsEmail, IsInt, Min } from 'class-validator';
+import { IsEmail, IsString, IsUUID, Length, IsInt, Min } from 'class-validator';
 
 export class TokenPayloadDto {
   @ApiProperty({
@@ -17,8 +17,13 @@ export class TokenPayloadDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: 1, description: "User's role" })
+  @ApiProperty({ example: 1, description: "User's role id" })
   @IsInt()
-  @Min(1)
+  @Min(0)
   role_id: number;
+
+  @ApiProperty({ example: 'user', description: "User's role name" })
+  @IsString()
+  @Length(3, 255)
+  role_name: string;
 }

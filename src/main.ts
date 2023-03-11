@@ -1,13 +1,21 @@
 import { NestFactory } from '@nestjs/core';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
+import compression from '@fastify/compress';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    logger: ['log', 'error', 'warn', 'debug', 'verbose'],
-  });
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter({ logger: true }),
+  );
+
+  app.setGlobalPrefix('api');
+  app.register(compression);
   app.enableCors({
-    origin: ['localhost:3000', 'https://www.bde-polytechmontpellier.fr'],
+    origin: '*',
     methods: 'GET,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204,
@@ -19,8 +27,8 @@ async function bootstrap() {
     .setVersion('2.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('specs', app, document);
 
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();

@@ -1,26 +1,45 @@
+import { PrismaService } from './../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { CreateClubDto } from './dto/create-club.dto';
-import { UpdateClubDto } from './dto/update-club.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ClubsService {
-  create(createClubDto: CreateClubDto) {
-    return 'This action adds a new club';
+  constructor(private readonly prismaService: PrismaService) {}
+
+  create(createClubInput: Prisma.ClubCreateInput) {
+    return this.prismaService.club.create({ data: createClubInput });
   }
 
   findAll() {
-    return `This action returns all clubs`;
+    return this.prismaService.club.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} club`;
+  findOne(id: string) {
+    return this.prismaService.club.findUnique({ where: { id } });
   }
 
-  update(id: number, updateClubDto: UpdateClubDto) {
-    return `This action updates a #${id} club`;
+  update(id: string, updateClubInput: Prisma.ClubUpdateInput) {
+    return this.prismaService.club.update({
+      where: { id },
+      data: updateClubInput,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} club`;
+  activate(id: string) {
+    return this.prismaService.club.update({
+      where: { id },
+      data: { active: true },
+    });
+  }
+
+  deactivate(id: string) {
+    return this.prismaService.club.update({
+      where: { id },
+      data: { active: false },
+    });
+  }
+
+  remove(id: string) {
+    return this.prismaService.club.delete({ where: { id } });
   }
 }

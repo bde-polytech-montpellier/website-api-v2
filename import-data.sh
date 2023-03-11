@@ -3,7 +3,7 @@
 ##################################
 
 SQL_FILES_LOC="./sql"
-SQL_FILES=$(exa --no-icons -1 $SQL_FILES_LOC)
+SQL_FILES=$(find $SQL_FILES_LOC -name "*.sql" -print)
 
 for FILE in $SQL_FILES
 do

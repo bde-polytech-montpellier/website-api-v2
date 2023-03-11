@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
@@ -9,7 +8,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -21,11 +19,6 @@ export class UsersController {
   @Get()
   findAll() {
     return this.usersService.findAll();
-  }
-
-  @Post()
-  create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
   }
 
   @Get(':id')
@@ -43,7 +36,7 @@ export class UsersController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.remove(id);
   }
 
   @Get('name/:name')

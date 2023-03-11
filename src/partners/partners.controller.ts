@@ -12,6 +12,7 @@ import { PartnersService } from './partners.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { UpdatePartnerDto } from './dto/update-partner.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Logger } from '@nestjs/common';
 
 @ApiTags('partners')
 @Controller('partners')
@@ -23,14 +24,17 @@ export class PartnersController {
     return this.partnersService.findAll();
   }
 
-  @Post()
-  create(@Body(new ValidationPipe()) createPartnerDto: CreatePartnerDto) {
-    return this.partnersService.create(createPartnerDto);
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.partnersService.findOne(+id);
+    return this.partnersService.findOne(id);
+  }
+
+  @Post()
+  create(@Body(new ValidationPipe()) createPartnerDto: CreatePartnerDto) {
+    Logger.log(
+      `Creating partner with data: ${JSON.stringify(createPartnerDto)}`,
+    );
+    return this.partnersService.create(createPartnerDto);
   }
 
   @Patch(':id')
@@ -38,11 +42,15 @@ export class PartnersController {
     @Param('id') id: string,
     @Body(new ValidationPipe()) updatePartnerDto: UpdatePartnerDto,
   ) {
-    return this.partnersService.update(+id, updatePartnerDto);
+    Logger.log(
+      `Updating partner with data: ${JSON.stringify(updatePartnerDto)}`,
+    );
+    return this.partnersService.update(id, updatePartnerDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.partnersService.remove(+id);
+    Logger.log(`Deleting partner with id: ${id}`);
+    return this.partnersService.remove(id);
   }
 }
