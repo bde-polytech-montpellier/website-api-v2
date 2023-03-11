@@ -4,6 +4,14 @@
 
 Reworked API for the website. This API is written in TypeScript and uses the [NestJS](https://github.com/nestjs/nest) framework.
 
+## Stack
+
+- [NestJS](https://nestjs.com)
+- [Prisma](https://www.prisma.io)
+- [Docker](https://www.docker.com)
+- [Jest](https://jestjs.io/)
+- [PostgreSQL](https://www.postgresql.org)
+
 ## Installation
 
 ```bash
@@ -11,6 +19,20 @@ npm install
 ```
 
 ## Running the app
+
+First, launch the database with docker-compose:
+
+```bash
+docker-compose up -d
+```
+
+Then, run the migrations:
+
+```bash
+npx prisma migrate dev
+```
+
+Finally, start the NestJS server:
 
 ```bash
 # development
@@ -35,17 +57,3 @@ npm run test:e2e
 # test coverage
 npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
